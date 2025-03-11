@@ -98,12 +98,9 @@ cd insyde
 2. Upload a 3D model file (STL/OBJ).  
 3. View and interact with the 3D model using the UI controls.  
 4. Check history to view previously uploaded models.  
-
-## Demo Video  
-
+ 
 ## 🎥 Demo Video  
-[![Watch the demo]((https://github.com/user-attachments/assets/c566b999-13df-4266-9bd8-ca144b7bbe10)
-)](https://drive.google.com/file/d/1V6rTUdr0KTGZW5y7vZY_koL0tgrsIuXS/view?usp=sharing)
+[![Watch the demo](https://github.com/user-attachments/assets/d50cddff-4daf-4afc-a1d7-36ddce997ea8)](https://drive.google.com/file/d/1V6rTUdr0KTGZW5y7vZY_koL0tgrsIuXS/view?usp=sharing)
 
 
 ## Contact  
