@@ -105,9 +105,6 @@ cd insyde
 [![Watch the demo](![Screenshot 2025-03-12 042111](https://github.com/user-attachments/assets/c566b999-13df-4266-9bd8-ca144b7bbe10)
 )](https://drive.google.com/file/d/1V6rTUdr0KTGZW5y7vZY_koL0tgrsIuXS/view?usp=sharing)
 
-[![Watch the demo](![image](https://github.com/user-attachments/assets/59ccc728-2f4f-4291-9c1d-240268db1c14)
-)](https://drive.google.com/file/d/1V6rTUdr0KTGZW5y7vZY_koL0tgrsIuXS/view?usp=sharing)
-
 ## Contact  
 
 Feel free to ask any type of questions.  
