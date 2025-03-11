@@ -20,21 +20,17 @@ import {
 } from 'lucide-react';
 import '../css/CADViewer.css';
 
-// Import UI components
 import { Tooltip } from './UI/Elements';
 
-// Model component to display the 3D model
 function Model({ model }) {
   return <primitive object={model} />;
 }
 
-// Custom controller component to handle rotation
 const ControlsHandler = ({ controlsRef }) => {
   const { camera, gl } = useThree();
   
   useEffect(() => {
     if (controlsRef.current) {
-      // Store the camera position reference in the ref
       controlsRef.current.camera = camera;
       controlsRef.current.domElement = gl.domElement;
     }
@@ -56,7 +52,6 @@ const CADViewer = ({ modelFile, onClose }) => {
   const canvasRef = useRef(null);
   const cameraRef = useRef(null);
 
-  // Load the 3D model
   useEffect(() => {
     if (!modelFile) return;
 
@@ -90,11 +85,9 @@ const CADViewer = ({ modelFile, onClose }) => {
           loadedModel = new Mesh(geometry, material);
         } else if (fileExtension === 'obj') {
           const loader = new OBJLoader();
-          // Convert ArrayBuffer to text for OBJ loader
           const text = new TextDecoder().decode(arrayBuffer);
           loadedModel = loader.parse(text);
           
-          // Apply material to all meshes in the OBJ
           loadedModel.traverse((child) => {
             if (child instanceof Mesh) {
               child.material = new MeshStandardMaterial({ 
@@ -127,7 +120,6 @@ const CADViewer = ({ modelFile, onClose }) => {
     }
   }, [modelFile]);
 
-  // Toggle fullscreen
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       containerRef.current.requestFullscreen().catch(err => {
@@ -138,7 +130,6 @@ const CADViewer = ({ modelFile, onClose }) => {
     }
   };
 
-  // Listen for fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -151,14 +142,12 @@ const CADViewer = ({ modelFile, onClose }) => {
     };
   }, []);
 
-  // Reset camera view
   const resetView = () => {
     if (controlsRef.current) {
       controlsRef.current.reset();
     }
   };
 
-  // Control handlers
   const handleZoomIn = () => {
     if (controlsRef.current) {
       controlsRef.current.dollyOut(1.2);
@@ -171,13 +160,11 @@ const CADViewer = ({ modelFile, onClose }) => {
     }
   };
 
-  // Improved toggle rotate controls function
   const toggleRotateControls = () => {
     setShowRotateControls(!showRotateControls);
     setActiveControl(showRotateControls ? null : 'rotate');
   };
 
-  // Fixed rotation methods that use OrbitControls correctly
   const rotateLeft = () => {
     if (controlsRef.current) {
       const currentAzimuth = controlsRef.current.getAzimuthalAngle();
@@ -210,7 +197,6 @@ const CADViewer = ({ modelFile, onClose }) => {
     }
   };
 
-  // Pan mode
   const setPanMode = () => {
     if (controlsRef.current) {
       controlsRef.current.enableRotate = false;
@@ -220,7 +206,6 @@ const CADViewer = ({ modelFile, onClose }) => {
     }
   };
 
-  // Reset to default interaction mode
   const resetControlMode = () => {
     if (controlsRef.current) {
       controlsRef.current.enableRotate = true;
@@ -230,17 +215,16 @@ const CADViewer = ({ modelFile, onClose }) => {
     }
   };
 
-  // Export model (placeholder)
   const exportModel = () => {
     alert("Export functionality will be implemented here");
   };
 
-  // Toggle grid
+
   const toggleGrid = () => {
     setShowGrid(!showGrid);
   };
 
-  // Render rotation controls in a grid layout for fullscreen
+  
   const renderGridRotationControls = () => {
     return (
       <div className="rotation-controls-container">
@@ -260,7 +244,7 @@ const CADViewer = ({ modelFile, onClose }) => {
     );
   };
 
-  // Render rotation controls in a horizontal line for non-fullscreen
+  
   const renderHorizontalRotationControls = () => {
     return (
       <div className="horizontal-rotation-controls">
@@ -321,12 +305,12 @@ const CADViewer = ({ modelFile, onClose }) => {
                 maxDistance={100}
               />
               <ControlsHandler controlsRef={controlsRef} />
-              {/* Grid and axes helpers are conditional based on showGrid state */}
+              {}
               {showGrid && <gridHelper args={[20, 20, 0x888888, 0xcccccc]} />}
               {showGrid && <axesHelper args={[5]} />}
             </Canvas>
             
-            {/* Floating controls for fullscreen mode */}
+            {}
             <div className={`cad-viewer-floating-controls ${isFullscreen ? 'visible' : 'hidden'}`}>
               <Tooltip title="Rotate Model">
                 <button 
@@ -337,7 +321,7 @@ const CADViewer = ({ modelFile, onClose }) => {
                 </button>
               </Tooltip>
               
-              {/* Grid rotation controls for fullscreen mode */}
+              {}
               {isFullscreen && showRotateControls && renderGridRotationControls()}
               
               <Tooltip title="Zoom In">
@@ -395,7 +379,7 @@ const CADViewer = ({ modelFile, onClose }) => {
         )}
       </div>
       
-      {/* Regular controls (visible in normal mode) */}
+      {}
       <div className="cad-viewer-controls">
         <Tooltip title="Rotate Model">
           <button 
@@ -406,7 +390,7 @@ const CADViewer = ({ modelFile, onClose }) => {
           </button>
         </Tooltip>
         
-        {/* Horizontal rotation controls for non-fullscreen mode */}
+        {}
         {!isFullscreen && showRotateControls && renderHorizontalRotationControls()}
         
         <Tooltip title="Zoom In">

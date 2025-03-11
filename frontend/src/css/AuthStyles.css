@@ -202,7 +202,6 @@
     text-decoration: underline;
 }
 
-/* Custom toast notification styling */
 .message-toast {
     position: fixed;
     top: 20px;

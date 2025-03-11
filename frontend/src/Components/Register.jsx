@@ -17,7 +17,6 @@ const Register = ({ switchToLogin }) => {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [isLoading, setIsLoading] = useState(false);
 
-  // Form validation
   const validate = (data) => {
     const errors = {};
 
@@ -54,7 +53,6 @@ const Register = ({ switchToLogin }) => {
     return errors;
   };
 
-  // Update errors when data or touched fields change
   React.useEffect(() => {
     setErrors(validate(data));
   }, [data, touched]);
@@ -85,9 +83,7 @@ const Register = ({ switchToLogin }) => {
 
       if (response.ok) {
         showMessage("Registration successful! Redirecting to dashboard...", "success");
-        // Store token in localStorage
         localStorage.setItem('token', responseData.token);
-        // Redirect after a short delay
         setTimeout(() => {
           navigate('/dashboard');
         }, 1500);

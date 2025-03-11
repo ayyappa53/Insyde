@@ -13,7 +13,6 @@ const History = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   
-  // Fetch models when component mounts
   useEffect(() => {
     fetchModels();
   }, []);
@@ -36,13 +35,11 @@ const History = () => {
     }
   };
 
-  // Filter models based on search term
   const filteredModels = models.filter(model => {
     return model.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       model.filetype.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  // Format date to a more readable format
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -52,20 +49,19 @@ const History = () => {
     });
   };
   
-  // Handle model download
+
   const handleDownload = async (id) => {
     try {
-      // Get the model details to get the filename
+      
       const response = await axios.get(`/api/models/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
       
-      // Create a download link with proper authorization headers
       const downloadUrl = `/api/models/file/${id}`;
       
-      // Fetch the file as a blob with authorization
+      
       const fileResponse = await fetch(downloadUrl, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -76,24 +72,21 @@ const History = () => {
         throw new Error(`Failed to download: ${fileResponse.status} ${fileResponse.statusText}`);
       }
       
-      // Get the file as a blob
+      
       const blob = await fileResponse.blob();
       
-      // Create a URL for the blob
+      
       const blobUrl = window.URL.createObjectURL(blob);
       
-      // Create a temporary link element to download the file
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = response.data.name; // Use the model name for the download
+      link.download = response.data.name; 
       document.body.appendChild(link);
       link.click();
       
-      // Clean up
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
       
-      // Update the download count in the UI (optional)
       setModels(models.map(model => {
         if (model._id === id) {
           return { ...model, downloads: model.downloads + 1 };
@@ -107,7 +100,7 @@ const History = () => {
     }
   };
   
-  // Handle viewing a model
+
   const handleViewModel = async (id) => {
     try {
       const response = await axios.get(`/api/models/${id}`, {
@@ -116,7 +109,7 @@ const History = () => {
         }
       });
       
-      // Fetch the file with authorization
+
       const fileResponse = await fetch(`/api/models/file/${id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -134,7 +127,6 @@ const History = () => {
       
       setViewingModel(file);
       
-      // Update the view count in the UI (optional)
       setModels(models.map(model => {
         if (model._id === id) {
           return { ...model, views: model.views + 1 };
@@ -148,18 +140,18 @@ const History = () => {
     }
   };
   
-  // Close model viewer
+
   const closeViewer = () => {
     setViewingModel(null);
   };
   
-  // Handle showing delete confirmation
+
   const confirmDelete = (id) => {
     setDeleteId(id);
     setShowDeleteModal(true);
   };
   
-  // Handle model deletion
+
   const handleDelete = async () => {
     try {
       await axios.delete(`/api/models/${deleteId}`, {
@@ -168,7 +160,6 @@ const History = () => {
         }
       });
       
-      // Update state to remove the deleted model
       setModels(models.filter(model => model._id !== deleteId));
       setShowDeleteModal(false);
       setDeleteId(null);
@@ -178,7 +169,7 @@ const History = () => {
     }
   };
   
-  // Cancel deletion
+
   const cancelDelete = () => {
     setShowDeleteModal(false);
     setDeleteId(null);
@@ -295,7 +286,7 @@ const History = () => {
         </>
       )}
 
-      {/* Model Viewer Modal */}
+      {}
       {viewingModel && (
   <div className="history-preview-modal">
     <div className="history-preview-content">
@@ -307,7 +298,7 @@ const History = () => {
   </div>
 )}
 
-      {/* Delete Confirmation Modal */}
+      {}
       {showDeleteModal && (
         <div className="delete-confirmation-modal">
           <div className="confirmation-content">

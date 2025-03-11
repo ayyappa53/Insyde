@@ -56,14 +56,12 @@ function App() {
   );
 }
 
-// Component that handles the authentication page (login/register)
 function AuthPage() {
   const [currentPage, setCurrentPage] = React.useState('login');
 
   const switchToLogin = () => setCurrentPage('login');
   const switchToRegister = () => setCurrentPage('register');
   
-  // Redirect to dashboard if already logged in
   React.useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {

@@ -6,11 +6,11 @@ const fs = require('fs');
 const auth = require('../middleware/auth');
 const Model = require('../models/Model');
 
-// Configure multer storage
+
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     const uploadDir = path.join(__dirname, '../uploads');
-    // Create directory if it doesn't exist
+
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
   }
 });
 
-// File filter to only accept STL and OBJ files
+
 const fileFilter = (req, file, cb) => {
   const allowedFileTypes = ['.stl', '.obj'];
   const ext = path.extname(file.originalname).toLowerCase();
@@ -41,9 +41,6 @@ const upload = multer({
   limits: { fileSize: 100 * 1024 * 1024 } // 100MB limit
 });
 
-// @route   POST api/models
-// @desc    Upload a new model
-// @access  Private
 router.post('/', auth, upload.single('model'), async (req, res) => {
   try {
     if (!req.file) {
@@ -58,7 +55,7 @@ router.post('/', auth, upload.single('model'), async (req, res) => {
       name: originalname,
       filename,
       filepath,
-      filesize: size / (1024 * 1024), // Convert to MB
+      filesize: size / (1024 * 1024),
       filetype
     });
 
@@ -73,9 +70,6 @@ router.post('/', auth, upload.single('model'), async (req, res) => {
   }
 });
 
-// @route   GET api/models
-// @desc    Get all models for the current user
-// @access  Private
 router.get('/', auth, async (req, res) => {
   try {
     const models = await Model.find({ user: req.user.id }).sort({ createdAt: -1 });
@@ -86,9 +80,7 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// @route   GET api/models/:id
-// @desc    Get model by ID
-// @access  Private
+
 router.get('/:id', auth, async (req, res) => {
   try {
     const model = await Model.findById(req.params.id);
@@ -97,12 +89,10 @@ router.get('/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Model not found' });
     }
 
-    // Check user
     if (model.user.toString() !== req.user.id) {
       return res.status(401).json({ message: 'User not authorized' });
     }
 
-    // Increment views
     model.views += 1;
     await model.save();
 
@@ -116,9 +106,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// @route   GET api/models/file/:id
-// @desc    Download model file
-// @access  Private
+
 router.get('/file/:id', auth, async (req, res) => {
   try {
     const model = await Model.findById(req.params.id);
@@ -127,12 +115,12 @@ router.get('/file/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Model not found' });
     }
 
-    // Check user
+
     if (model.user.toString() !== req.user.id) {
       return res.status(401).json({ message: 'User not authorized' });
     }
 
-    // Increment downloads
+
     model.downloads += 1;
     await model.save();
 
@@ -146,9 +134,7 @@ router.get('/file/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELETE api/models/:id
-// @desc    Delete a model
-// @access  Private
+
 router.delete('/:id', auth, async (req, res) => {
   try {
     const model = await Model.findById(req.params.id);
@@ -157,18 +143,16 @@ router.delete('/:id', auth, async (req, res) => {
       return res.status(404).json({ message: 'Model not found' });
     }
     
-    // Check user
+
     if (model.user.toString() !== req.user.id) {
       return res.status(401).json({ message: 'User not authorized' });
     }
-    
-    // Delete file from storage
+
     fs.unlink(model.filepath, async (err) => {
       if (err) {
         console.error('Error deleting file:', err);
       }
       
-      // Delete from database
       await Model.findByIdAndDelete(req.params.id);
       res.json({ message: 'Model removed' });
     });

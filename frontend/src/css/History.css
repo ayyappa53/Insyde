@@ -1,4 +1,3 @@
-/* History.css */
 .history-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -307,7 +306,6 @@
     background-color: #dc2626;
 }
 
-/* Responsive design - improved */
 @media (max-width: 1024px) {
     .models-table {
         min-width: 700px;

@@ -38,7 +38,6 @@ const Upload = () => {
   };
 
   const addFiles = (newFiles) => {
-    // Check file types - only allow STL and OBJ files
     const validFiles = newFiles.filter(file => {
       const extension = '.' + file.name.split('.').pop().toLowerCase();
       return ['.stl', '.obj'].includes(extension);
@@ -53,7 +52,6 @@ const Upload = () => {
       setError(null);
     }
 
-    // Auto-upload the files immediately after they're added
     uploadFiles(validFiles);
   };
 
@@ -75,7 +73,6 @@ const Upload = () => {
     setFiles(filesToUpload);
 
     try {
-      // Upload each file
       for (const file of filesToUpload) {
         const formData = new FormData();
         formData.append('model', file);
@@ -90,7 +87,6 @@ const Upload = () => {
       
       setUploadSuccess(true);
       
-      // Reset after success message
       setTimeout(() => {
         setUploadSuccess(true);
       }, 3000);
@@ -109,7 +105,7 @@ const Upload = () => {
         Upload your 3D models to view, manage, and interact with them in our CAD viewer platform.
       </p>
 
-      {/* Upload area */}
+      {}
       <div 
         className={`upload-area ${dragging ? 'dragging' : ''}`}
         onDragOver={handleDragOver}
@@ -135,7 +131,7 @@ const Upload = () => {
         <p className="upload-note">Supported formats: .stl, .obj</p>
       </div>
 
-      {/* Error message */}
+      {}
       {error && (
         <div className="upload-error">
           <AlertCircle size={20} />
@@ -143,7 +139,7 @@ const Upload = () => {
         </div>
       )}
 
-      {/* Success message */}
+      {}
       {uploadSuccess && (
         <div className="upload-success">
           <CheckCircle size={20} />
@@ -151,7 +147,7 @@ const Upload = () => {
         </div>
       )}
 
-      {/* File list */}
+      {}
       {files.length > 0 && (
         <div className="file-list">
           <h3>Uploading Files</h3>
@@ -186,7 +182,7 @@ const Upload = () => {
         </div>
       )}
 
-      {/* Model Preview Modal */}
+      {}
       {showPreview && previewFile && (
         <div className="preview-modal">
           <div className="preview-content">

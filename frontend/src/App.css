@@ -6,7 +6,6 @@
   position: relative;
 }
 
-/* Global CSS Variables */
 :root {
   --main-color: #6366f1;
   --main-color-hover: #4f46e5;
@@ -14,7 +13,6 @@
   --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Reset styles */
 * {
   margin: 0;
   padding: 0;
@@ -37,7 +35,6 @@ button {
   cursor: pointer;
 }
 
-/* Logo styles */
 .logo {
   position: absolute;
   top: 20px;
@@ -49,7 +46,6 @@ button {
   letter-spacing: 1px;
 }
 
-/* Updated footer styles */
 .footer {
   margin-top: auto;
   background-color: #000;
@@ -90,10 +86,8 @@ button {
 
 .twitter-icon:hover {
   color: #1DA1F2;
-  /* Twitter blue */
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .logo {
     font-size: 24px;

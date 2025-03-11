@@ -1,19 +1,17 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = function(req, res, next) {
-  // Get token from header
-  const token = req.header('Authorization')?.split(' ')[1]; // Bearer TOKEN format
 
-  // Check if no token
+  const token = req.header('Authorization')?.split(' ')[1];
+  
   if (!token) {
     return res.status(401).json({ message: 'No token, authorization denied' });
   }
 
   try {
-    // Verify token
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'insydesecretkey');
     
-    // Add user from payload to request
     req.user = decoded.user;
     next();
   } catch (err) {
