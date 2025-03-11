@@ -101,7 +101,8 @@ cd insyde
 
 ## Demo Video  
 
-[Watch the Demo](YOUR_VIDEO_LINK_HERE)  
+[![Watch the demo](![image](https://github.com/user-attachments/assets/59ccc728-2f4f-4291-9c1d-240268db1c14)
+)](https://drive.google.com/file/d/1V6rTUdr0KTGZW5y7vZY_koL0tgrsIuXS/view?usp=sharing)
 
 ## Contact  
 
