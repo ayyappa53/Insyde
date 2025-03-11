@@ -1,0 +1,267 @@
+.cad-viewer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.cad-viewer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.cad-viewer-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80%;
+}
+
+.close-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6c757d;
+    border-radius: 4px;
+    padding: 8px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.close-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #dc3545;
+}
+
+.cad-viewer-container {
+    flex: 1;
+    position: relative;
+    background-color: #f5f5f5;
+    overflow: hidden;
+    min-height: 400px;
+}
+
+.cad-viewer-controls {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 8px 16px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Floating controls for fullscreen mode */
+.cad-viewer-floating-controls {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    padding: 8px;
+    gap: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    transition: opacity 0.3s ease;
+}
+
+.cad-viewer-floating-controls.hidden {
+    display: none;
+}
+
+.cad-viewer-floating-controls.visible {
+    display: flex;
+}
+
+/* Fixed rotation controls styling for fullscreen mode */
+.rotation-controls-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 4px;
+    margin: 4px 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+/* Horizontal rotation controls for small screens / non-fullscreen mode */
+.horizontal-rotation-controls {
+    display: flex;
+    gap: 4px;
+    margin: 4px 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rotation-up-button {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.rotation-left-button {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.rotation-right-button {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.rotation-down-button {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.control-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    color: #495057;
+    transition: all 0.2s;
+}
+
+.control-button:hover {
+    background-color: #f8f9fa;
+    border-color: #ced4da;
+}
+
+.control-button.active {
+    background-color: #e9ecef;
+    border-color: #6c757d;
+    color: #007bff;
+    box-shadow: inset 0 0 0 1px #007bff;
+}
+
+.loading-overlay,
+.error-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 10;
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #007bff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.error-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #dc3545;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.cad-viewer-instructions {
+    padding: 8px 16px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    font-size: 14px;
+    color: #6c757d;
+    text-align: center;
+}
+
+/* For fullscreen mode */
+.cad-viewer:fullscreen {
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.cad-viewer:fullscreen .cad-viewer-container {
+    height: calc(100vh - 120px);
+}
+
+/* Improved tooltip styling */
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-container .tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+    .cad-viewer-controls {
+        justify-content: center;
+    }
+
+    .cad-viewer-floating-controls {
+        right: 10px;
+        top: 10px;
+    }
+}

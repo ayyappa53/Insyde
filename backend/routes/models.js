@@ -1,0 +1,184 @@
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const auth = require('../middleware/auth');
+const Model = require('../models/Model');
+
+// Configure multer storage
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    const uploadDir = path.join(__dirname, '../uploads');
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: function(req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const fileExtension = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + fileExtension);
+  }
+});
+
+// File filter to only accept STL and OBJ files
+const fileFilter = (req, file, cb) => {
+  const allowedFileTypes = ['.stl', '.obj'];
+  const ext = path.extname(file.originalname).toLowerCase();
+  
+  if (allowedFileTypes.includes(ext)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only STL and OBJ files are allowed!'), false);
+  }
+};
+
+const upload = multer({ 
+  storage, 
+  fileFilter,
+  limits: { fileSize: 100 * 1024 * 1024 } // 100MB limit
+});
+
+// @route   POST api/models
+// @desc    Upload a new model
+// @access  Private
+router.post('/', auth, upload.single('model'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const { originalname, filename, path: filepath, size } = req.file;
+    const filetype = path.extname(originalname).slice(1).toLowerCase();
+
+    const newModel = new Model({
+      user: req.user.id,
+      name: originalname,
+      filename,
+      filepath,
+      filesize: size / (1024 * 1024), // Convert to MB
+      filetype
+    });
+
+    const model = await newModel.save();
+    res.json(model);
+  } catch (err) {
+    console.error(err);
+    if (err.message === 'Only STL and OBJ files are allowed!') {
+      return res.status(400).json({ message: err.message });
+    }
+    res.status(500).json({ message: 'Server error during upload' });
+  }
+});
+
+// @route   GET api/models
+// @desc    Get all models for the current user
+// @access  Private
+router.get('/', auth, async (req, res) => {
+  try {
+    const models = await Model.find({ user: req.user.id }).sort({ createdAt: -1 });
+    res.json(models);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error retrieving models' });
+  }
+});
+
+// @route   GET api/models/:id
+// @desc    Get model by ID
+// @access  Private
+router.get('/:id', auth, async (req, res) => {
+  try {
+    const model = await Model.findById(req.params.id);
+    
+    if (!model) {
+      return res.status(404).json({ message: 'Model not found' });
+    }
+
+    // Check user
+    if (model.user.toString() !== req.user.id) {
+      return res.status(401).json({ message: 'User not authorized' });
+    }
+
+    // Increment views
+    model.views += 1;
+    await model.save();
+
+    res.json(model);
+  } catch (err) {
+    console.error(err);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Model not found' });
+    }
+    res.status(500).json({ message: 'Server error retrieving model' });
+  }
+});
+
+// @route   GET api/models/file/:id
+// @desc    Download model file
+// @access  Private
+router.get('/file/:id', auth, async (req, res) => {
+  try {
+    const model = await Model.findById(req.params.id);
+    
+    if (!model) {
+      return res.status(404).json({ message: 'Model not found' });
+    }
+
+    // Check user
+    if (model.user.toString() !== req.user.id) {
+      return res.status(401).json({ message: 'User not authorized' });
+    }
+
+    // Increment downloads
+    model.downloads += 1;
+    await model.save();
+
+    res.download(model.filepath, model.name);
+  } catch (err) {
+    console.error(err);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Model not found' });
+    }
+    res.status(500).json({ message: 'Server error downloading file' });
+  }
+});
+
+// @route   DELETE api/models/:id
+// @desc    Delete a model
+// @access  Private
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const model = await Model.findById(req.params.id);
+    
+    if (!model) {
+      return res.status(404).json({ message: 'Model not found' });
+    }
+    
+    // Check user
+    if (model.user.toString() !== req.user.id) {
+      return res.status(401).json({ message: 'User not authorized' });
+    }
+    
+    // Delete file from storage
+    fs.unlink(model.filepath, async (err) => {
+      if (err) {
+        console.error('Error deleting file:', err);
+      }
+      
+      // Delete from database
+      await Model.findByIdAndDelete(req.params.id);
+      res.json({ message: 'Model removed' });
+    });
+  } catch (err) {
+    console.error(err);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ message: 'Model not found' });
+    }
+    res.status(500).json({ message: 'Server error deleting model' });
+  }
+});
+
+module.exports = router;
